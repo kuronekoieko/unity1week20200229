@@ -32,8 +32,8 @@ public class HumanController : MonoBehaviour
         //目標地点のどれぐらい手前で停止するかの距離
         agent.stoppingDistance = 3;
         agent.angularSpeed = 1000;
-        agent.acceleration = 50;
-        agent.speed = 10;
+        agent.acceleration = 100;
+        agent.speed = 15;
         agent.enabled = false;
 
         for (int i = 0; i < animators.Length; i++)

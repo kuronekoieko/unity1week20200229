@@ -51,10 +51,10 @@ public class ResultCanvasManager : BaseCanvasManager
         string tweetText = "あなたのスコアは…\n\n" +
             "" + (Variables.playerCount) +
             "\n\nでした！！みんなもやってみよう！！" +
-            "\n\n#unitychan.io\n#unity1week\n";
+            "\n\n#unitychanio\n#unity1week\n";
         try
         {
-            naichilab.UnityRoomTweet.Tweet("unitychan.io", tweetText);
+            naichilab.UnityRoomTweet.Tweet("unitychanio", tweetText);
         }
         catch (System.Exception)
         {
