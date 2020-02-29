@@ -9,12 +9,14 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] CameraController cameraController;
     [SerializeField] UnityChanController unityChanController;
+    [SerializeField] HumanController human;
 
     public void OnStart()
     {
 
         unityChanController.OnStart();
         cameraController.OnStart(playerPos: unityChanController.transform.position);
+        human.OnStart(HumanType.None, unityChanController);
     }
 
     public void OnInitialize()
@@ -24,6 +26,7 @@ public class GameManager : MonoBehaviour
 
     public void OnUpdate()
     {
+        human.OnUpdate();
         unityChanController.OnUpdate();
         cameraController.OnUpdate();
         cameraController.SetCamPos(playerPos: unityChanController.transform.position);

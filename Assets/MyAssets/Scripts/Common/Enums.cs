@@ -13,3 +13,10 @@ public enum GameState
 {
 
 }
+
+public enum HumanType
+{
+    None,
+    Player,
+    Enemy,
+}

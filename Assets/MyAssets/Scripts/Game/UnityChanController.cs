@@ -25,7 +25,6 @@ public class UnityChanController : MonoBehaviour
         rb.velocity = warkVec.normalized * walkSpeed;
     }
 
-
     Vector3 GetWalkVec()
     {
         if (GetPosition(out Vector3 result))
