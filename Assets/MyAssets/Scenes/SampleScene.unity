@@ -40182,6 +40182,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startButton: {fileID: 324867436}
+  startButtonText: {fileID: 82558708}
 --- !u!114 &844989019
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class StartCanvasManager : BaseCanvasManager
 {
@@ -20,6 +21,7 @@ public class StartCanvasManager : BaseCanvasManager
 
     protected override void OnOpen()
     {
+        Anim();
     }
 
     protected override void OnClose()
@@ -32,17 +34,16 @@ public class StartCanvasManager : BaseCanvasManager
         Variables.screenState = ScreenState.GAME;
     }
 
-    /*  void Anim()
+    void Anim()
+    {
+        Sequence sequence = DOTween.Sequence()
+        .Append(startButtonText.rectTransform.DOScale(1.1f, 0.5f))
+        .Append(startButtonText.transform.DOScale(1f, 0.5f))
+        .OnComplete(() =>
         {
-            startButtonText.rectTransform.DOScale(1.1f, 0.5f)
-                   .OnComplete(() =>
-                   {
-                       startText.transform.DOScale(1f, 0.5f)
-                               .OnComplete(() =>
-                               {
-                                   Anim();
-                               });
-                   });
-        }*/
+            Anim();
+        });
+
+    }
 
 }
