@@ -21,7 +21,7 @@ public class HumanController : MonoBehaviour
     float m_attenuation = 0.5f;
     private Vector3 m_velocity;
     NavMeshAgent agent;
-    HumanType humanType;
+    public HumanType humanType { set; get; }
 
     public void OnStart(HumanType humanType, UnityChanController unityChan)
     {
@@ -34,6 +34,7 @@ public class HumanController : MonoBehaviour
         agent.angularSpeed = 1000;
         agent.acceleration = 50;
         agent.speed = 10;
+        agent.enabled = false;
     }
 
     public void OnUpdate()
@@ -59,12 +60,31 @@ public class HumanController : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
+        ColToUnityChan(other);
+        ColToPlayerHuman(other);
+    }
+
+    void ColToUnityChan(Collision other)
+    {
         var unityChan = other.gameObject.GetComponent<UnityChanController>();
-        if (unityChan)
-        {
-            animator.SetBool("Run", true);
-            humanType = HumanType.Player;
-        }
+        if (unityChan == null) { return; }
+        HumanTypeToPlayer();
+    }
+
+    void ColToPlayerHuman(Collision other)
+    {
+        var human = other.gameObject.GetComponent<HumanController>();
+        if (human == null) { return; }
+        if (human.humanType != HumanType.Player) { return; }
+        HumanTypeToPlayer();
+    }
+
+
+    void HumanTypeToPlayer()
+    {
+        animator.SetBool("Run", true);
+        humanType = HumanType.Player;
+        agent.enabled = true;
     }
 
 

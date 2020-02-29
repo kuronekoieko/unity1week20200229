@@ -7,5 +7,5 @@ using UnityEngine;
 /// </summary>
 public class Values
 {
-    public static readonly float TIME_LIMIT = 60;
+    public static readonly float TIME_LIMIT = 90;
 }
