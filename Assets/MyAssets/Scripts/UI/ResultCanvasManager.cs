@@ -27,6 +27,8 @@ public class ResultCanvasManager : BaseCanvasManager
     protected override void OnOpen()
     {
         gameObject.SetActive(true);
+        // Type == Number の場合
+        naichilab.RankingLoader.Instance.SendScoreAndShowRanking(Variables.playerCount);
     }
 
     protected override void OnClose()
