@@ -13,9 +13,12 @@ using UnityEngine.SceneManagement;
 public class ResultCanvasManager : BaseCanvasManager
 {
     [SerializeField] Button nextGameButton;
+    [SerializeField] Button twitterButton;
+
     public override void OnStart()
     {
         nextGameButton.onClick.AddListener(OnClickNextGameButton);
+        twitterButton.onClick.AddListener(OnClickTwitterButton);
         base.SetScreenAction(thisScreen: ScreenState.RESULT);
     }
 
@@ -40,5 +43,23 @@ public class ResultCanvasManager : BaseCanvasManager
     {
         Variables.screenState = ScreenState.INITIALIZE;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    void OnClickTwitterButton()
+    {
+        // AudioManager.i.PlayOneShot(1);
+        string tweetText = "あなたのスコアは…\n\n" +
+            "" + (Variables.playerCount) +
+            "\n\nでした！！みんなもやってみよう！！" +
+            "\n\n#unitychan.io\n#unity1week\n";
+        try
+        {
+            naichilab.UnityRoomTweet.Tweet("unitychan.io", tweetText);
+        }
+        catch (System.Exception)
+        {
+
+            throw;
+        }
     }
 }
