@@ -33,6 +33,7 @@ public class HumanController : MonoBehaviour
         agent.stoppingDistance = 3;
         agent.angularSpeed = 1000;
         agent.acceleration = 50;
+        agent.speed = 10;
     }
 
     public void OnUpdate()
@@ -56,7 +57,7 @@ public class HumanController : MonoBehaviour
 
     }
 
-    void OnTriggerEnter(Collider other)
+    void OnCollisionEnter(Collision other)
     {
         var unityChan = other.gameObject.GetComponent<UnityChanController>();
         if (unityChan)
