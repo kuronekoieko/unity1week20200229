@@ -16,6 +16,7 @@ using UnityEngine.AI;
 public class HumanController : MonoBehaviour
 {
     [SerializeField] Animator[] animators;
+    [SerializeField] ParticleSystem hitPS;
     UnityChanController unityChan;
     float m_speed = 5;
     float m_attenuation = 0.5f;
@@ -96,6 +97,7 @@ public class HumanController : MonoBehaviour
         humanType = HumanType.Player;
         agent.enabled = true;
         Variables.playerCount++;
+        hitPS.Play();
     }
 
 
