@@ -50,7 +50,7 @@ public class GameDirector : MonoBehaviour
             case ScreenState.INITIALIZE:
                 gameManager.OnInitialize();
                 uIManager.OnInitialize();
-                Variables.screenState = ScreenState.GAME;
+                Variables.screenState = ScreenState.START;
                 break;
             case ScreenState.GAME:
                 gameManager.OnUpdate();
