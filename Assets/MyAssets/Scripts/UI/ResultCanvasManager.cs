@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 結果画面
@@ -36,5 +37,6 @@ public class ResultCanvasManager : BaseCanvasManager
     void OnClickNextGameButton()
     {
         Variables.screenState = ScreenState.INITIALIZE;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

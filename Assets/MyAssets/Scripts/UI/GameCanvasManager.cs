@@ -12,11 +12,15 @@ using UniRx;
 /// </summary>
 public class GameCanvasManager : BaseCanvasManager
 {
-    [SerializeField] Button gameEndButton;
+    [SerializeField] Text timerText;
     public override void OnStart()
     {
-        gameEndButton.onClick.AddListener(OnClickGameEndButton);
         base.SetScreenAction(thisScreen: ScreenState.GAME);
+
+        this.ObserveEveryValueChanged(timer => Variables.timer)
+            .Subscribe(_ => { SetTimeCountText(); })
+            .AddTo(this.gameObject);
+
     }
 
     public override void OnInitialize()
@@ -37,5 +41,13 @@ public class GameCanvasManager : BaseCanvasManager
     void OnClickGameEndButton()
     {
         Variables.screenState = ScreenState.RESULT;
+    }
+
+    void SetTimeCountText()
+    {
+        int sec = Mathf.CeilToInt(Variables.timer);
+        float mSec = (Variables.timer - (sec - 1)) * 60f;
+        if (Variables.timer == Values.TIME_LIMIT) { mSec = 0; }
+        timerText.text = sec + "." + mSec.ToString("00");
     }
 }

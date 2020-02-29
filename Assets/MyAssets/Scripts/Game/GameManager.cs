@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] CameraController cameraController;
     [SerializeField] UnityChanController unityChanController;
+
     public void OnStart()
     {
 
@@ -18,7 +19,7 @@ public class GameManager : MonoBehaviour
 
     public void OnInitialize()
     {
-
+        Variables.timer = Values.TIME_LIMIT;
     }
 
     public void OnUpdate()
@@ -26,6 +27,11 @@ public class GameManager : MonoBehaviour
         unityChanController.OnUpdate();
         cameraController.OnUpdate();
         cameraController.SetCamPos(playerPos: unityChanController.transform.position);
+        Variables.timer -= Time.deltaTime;
+        if (Variables.timer < 0)
+        {
+            Variables.screenState = ScreenState.RESULT;
+        }
     }
 
 
