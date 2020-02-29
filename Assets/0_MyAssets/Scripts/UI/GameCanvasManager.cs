@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
+using System.Linq;
 
 /// <summary>
 /// ゲーム画面
@@ -13,7 +14,8 @@ using UniRx;
 public class GameCanvasManager : BaseCanvasManager
 {
     [SerializeField] Text timerText;
-    [SerializeField] Text playerCountText;
+    [SerializeField] HumanCountText[] humanCountTexts;
+
     public override void OnStart()
     {
         base.SetScreenAction(thisScreen: ScreenState.GAME);
@@ -22,9 +24,19 @@ public class GameCanvasManager : BaseCanvasManager
             .Subscribe(_ => { SetTimeCountText(); })
             .AddTo(this.gameObject);
 
-        this.ObserveEveryValueChanged(humanCount => Variables.playerCount)
-            .Subscribe(humanCount => { playerCountText.text = humanCount.ToString(); })
-            .AddTo(this.gameObject);
+        foreach (KeyValuePair<HumanType, int> kvp in Variables.humanCountDic)
+        {
+            var humanCountText = humanCountTexts
+                    .Where(h => h.humanType == kvp.Key)
+                    .FirstOrDefault();
+            if (humanCountText == null) { continue; }
+
+            this.ObserveEveryValueChanged(humanCount => Variables.humanCountDic[kvp.Key])
+                .Subscribe(humanCount => { humanCountText.text.text = humanCount.ToString(); })
+                .AddTo(this.gameObject);
+        }
+
+
     }
 
     public override void OnInitialize()
@@ -53,5 +65,12 @@ public class GameCanvasManager : BaseCanvasManager
         float mSec = (Variables.timer - (sec - 1)) * 60f;
         if (Variables.timer == Values.TIME_LIMIT) { mSec = 0; }
         timerText.text = sec + "." + mSec.ToString("00");
+    }
+
+    [System.Serializable]
+    public class HumanCountText
+    {
+        public HumanType humanType;
+        public Text text;
     }
 }

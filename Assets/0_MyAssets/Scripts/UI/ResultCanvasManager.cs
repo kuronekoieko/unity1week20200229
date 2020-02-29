@@ -31,7 +31,8 @@ public class ResultCanvasManager : BaseCanvasManager
     {
         gameObject.SetActive(true);
         // Type == Number の場合
-        naichilab.RankingLoader.Instance.SendScoreAndShowRanking(Variables.playerCount);
+        naichilab.RankingLoader.Instance
+            .SendScoreAndShowRanking(Variables.humanCountDic[HumanType.Player]);
     }
 
     protected override void OnClose()
@@ -49,7 +50,7 @@ public class ResultCanvasManager : BaseCanvasManager
     {
         // AudioManager.i.PlayOneShot(1);
         string tweetText = "あなたのスコアは…\n\n" +
-            "" + (Variables.playerCount) +
+            "" + (Variables.humanCountDic[HumanType.Player]) +
             "\n\nでした！！みんなもやってみよう！！" +
             "\n\n#unitychanio\n#unity1week\n";
         try

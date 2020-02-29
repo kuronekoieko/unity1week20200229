@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UnityEngine.UI;
+using System;
+using System.Linq;
 
 /// <summary>
 /// 3D空間の処理の管理
@@ -17,20 +19,27 @@ public class GameManager : MonoBehaviour
     public HumanManager humanManager { get { return _humanManager; } }
     public UnityChanController unityChanController { get { return _unityChanController; } }
 
+    void Awake()
+    {
+        Variables.humanCountDic = new Dictionary<HumanType, int>();
+        foreach (HumanType humanType in Enum.GetValues(typeof(HumanType)))
+        {
+            Variables.humanCountDic.Add(humanType, 0);
+        }
+    }
+
     public void OnStart()
     {
-
         _unityChanController.OnStart();
         _cameraController.OnStart(playerPos: _unityChanController.transform.position);
         _humanManager.OnStart(_unityChanController);
         _nPCController.OnStart();
-
+        Variables.timer = Values.TIME_LIMIT;
     }
 
     public void OnInitialize()
     {
-        Variables.timer = Values.TIME_LIMIT;
-        Variables.playerCount = 0;
+
     }
 
     public void OnUpdate()
@@ -46,7 +55,5 @@ public class GameManager : MonoBehaviour
             Variables.screenState = ScreenState.RESULT;
         }
     }
-
-
 
 }

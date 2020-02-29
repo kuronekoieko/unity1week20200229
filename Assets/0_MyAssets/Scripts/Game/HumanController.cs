@@ -102,7 +102,7 @@ public class HumanController : MonoBehaviour
         animators[1].SetBool("Run", true);
 
         agent.enabled = true;
-        Variables.playerCount++;
+        Variables.humanCountDic[humanType]++;
         hitPS.Play();
     }
 
