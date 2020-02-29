@@ -8,17 +8,27 @@ using UnityEngine;
 /// </summary>
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] GameCanvasManager gameCanvasManager;
-    [SerializeField] ResultCanvasManager resultCanvasManager;
+    [SerializeField] RectTransform safeArea;
+    BaseCanvasManager[] baseCanvasManagers;
+
     public void OnStart()
     {
-        gameCanvasManager.OnStart();
-        resultCanvasManager.OnStart();
+        baseCanvasManagers = new BaseCanvasManager[safeArea.childCount];
+        for (int i = 0; i < baseCanvasManagers.Length; i++)
+        {
+            var baseCanvasManager = safeArea.GetChild(i).GetComponent<BaseCanvasManager>();
+            if (baseCanvasManager == null) { continue; }
+            baseCanvasManagers[i] = baseCanvasManager;
+            baseCanvasManagers[i].OnStart();
+        }
     }
 
     public void OnInitialize()
     {
-        gameCanvasManager.OnInitialize();
-        resultCanvasManager.OnInitialize();
+        for (int i = 0; i < safeArea.childCount; i++)
+        {
+            if (baseCanvasManagers[i] == null) { continue; }
+            baseCanvasManagers[i].OnInitialize();
+        }
     }
 }

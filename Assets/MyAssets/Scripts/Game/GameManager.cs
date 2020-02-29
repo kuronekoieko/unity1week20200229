@@ -7,9 +7,13 @@ using UnityEngine;
 /// </summary>
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] CameraController cameraController;
+    [SerializeField] UnityChanController unityChanController;
     public void OnStart()
     {
 
+        unityChanController.OnStart();
+        cameraController.OnStart(playerPos: unityChanController.transform.position);
     }
 
     public void OnInitialize()
@@ -19,6 +23,11 @@ public class GameManager : MonoBehaviour
 
     public void OnUpdate()
     {
-
+        unityChanController.OnUpdate();
+        cameraController.OnUpdate();
+        cameraController.SetCamPos(playerPos: unityChanController.transform.position);
     }
+
+
+
 }
