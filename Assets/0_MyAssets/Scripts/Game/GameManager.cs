@@ -9,18 +9,21 @@ using UnityEngine.UI;
 /// </summary>
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] CameraController cameraController;
-    [SerializeField] UnityChanController unityChanController;
-    [SerializeField] HumanManager humanManager;
+    [SerializeField] CameraController _cameraController;
+    [SerializeField] UnityChanController _unityChanController;
+    [SerializeField] HumanManager _humanManager;
+    [SerializeField] NPCController _nPCController;
 
+    public HumanManager humanManager { get { return _humanManager; } }
+    public UnityChanController unityChanController { get { return _unityChanController; } }
 
     public void OnStart()
     {
 
-        unityChanController.OnStart();
-        cameraController.OnStart(playerPos: unityChanController.transform.position);
-        humanManager.OnStart(unityChanController);
-
+        _unityChanController.OnStart();
+        _cameraController.OnStart(playerPos: _unityChanController.transform.position);
+        _humanManager.OnStart(_unityChanController);
+        _nPCController.OnStart();
 
     }
 
@@ -32,10 +35,11 @@ public class GameManager : MonoBehaviour
 
     public void OnUpdate()
     {
-        humanManager.OnUpdate();
-        unityChanController.OnUpdate();
-        cameraController.OnUpdate();
-        cameraController.SetCamPos(playerPos: unityChanController.transform.position);
+        _humanManager.OnUpdate();
+        _unityChanController.OnUpdate();
+        _nPCController.OnUpdate();
+        _cameraController.OnUpdate();
+        _cameraController.SetCamPos(playerPos: _unityChanController.transform.position);
         Variables.timer -= Time.deltaTime;
         if (Variables.timer < 0)
         {

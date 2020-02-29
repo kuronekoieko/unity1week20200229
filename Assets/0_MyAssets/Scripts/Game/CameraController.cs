@@ -14,21 +14,18 @@ public class CameraController : MonoBehaviour
 
     Dictionary<int, float> apertureDic = new Dictionary<int, float>()
     {
-        {0,20.0f},
         {5,30.0f},
-        {15,35.0f},
+        {20,35.0f},
         {30,40.0f},
         {50,40.0f},
     };
 
-
-
     public void OnStart(Vector3 playerPos)
     {
         distanceToPlayer = transform.position - playerPos;
-        nFocalLength = distanceToPlayer.magnitude;
 
-
+        nFocalLength = focalLength(Camera.main.fieldOfView, 20);
+        transform.position = playerPos + distanceToPlayer.normalized * nFocalLength;
     }
 
 

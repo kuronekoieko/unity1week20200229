@@ -11,7 +11,8 @@ using UnityEngine;
 public class GameDirector : MonoBehaviour
 {
     UIManager uIManager;
-    GameManager gameManager;
+    public GameManager gameManager { get; private set; }
+    public static GameDirector i;
 
     /// <summary>
     /// インスタンスの生成はAwakeで
@@ -19,6 +20,7 @@ public class GameDirector : MonoBehaviour
     /// </summary>
     void Awake()
     {
+        i = this;
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 30;
         uIManager = GetComponent<UIManager>();

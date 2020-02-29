@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class HumanManager : MonoBehaviour
 {
@@ -12,17 +13,17 @@ public class HumanManager : MonoBehaviour
 
     public void OnStart(UnityChanController unityChan)
     {
-        HumanCreator(unityChan);
+        HumanCreator();
     }
 
-    void HumanCreator(UnityChanController unityChan)
+    void HumanCreator()
     {
         humanControllers = new HumanController[500];
         for (int i = 0; i < humanControllers.Length; i++)
         {
             Vector3 pos = GetRandomPos();
             humanControllers[i] = Instantiate(humanControllerPrefab, pos, Quaternion.identity, transform);
-            humanControllers[i].OnStart(HumanType.None, unityChan);
+            humanControllers[i].OnStart(HumanType.None);
         }
     }
 
@@ -40,5 +41,15 @@ public class HumanManager : MonoBehaviour
         {
             humanControllers[i].OnUpdate();
         }
+    }
+
+    public Transform GetTargetTransform(Vector3 npcPos)
+    {
+        var humanController = humanControllers
+            .Where(h => h.humanType == HumanType.None)
+            .OrderBy(h => (npcPos - h.transform.position).magnitude)
+            .FirstOrDefault();
+
+        return humanController.transform;
     }
 }

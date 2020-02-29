@@ -18,5 +18,5 @@ public enum HumanType
 {
     None,
     Player,
-    Enemy,
+    NPC,
 }

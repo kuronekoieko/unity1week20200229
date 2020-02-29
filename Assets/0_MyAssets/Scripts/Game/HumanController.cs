@@ -17,16 +17,15 @@ public class HumanController : MonoBehaviour
 {
     [SerializeField] Animator[] animators;
     [SerializeField] ParticleSystem hitPS;
-    UnityChanController unityChan;
+    public Transform targetTransform { get; set; }
     float m_speed = 5;
     float m_attenuation = 0.5f;
     private Vector3 m_velocity;
     NavMeshAgent agent;
     public HumanType humanType { set; get; }
 
-    public void OnStart(HumanType humanType, UnityChanController unityChan)
+    public void OnStart(HumanType humanType)
     {
-        this.unityChan = unityChan;
         this.humanType = humanType;
         // animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
@@ -47,18 +46,13 @@ public class HumanController : MonoBehaviour
     {
         switch (humanType)
         {
-            case HumanType.Player:
-
-                //こっちだと重い？
-                //agent.destination = player.transform.position;
-                agent.SetDestination(unityChan.transform.position);
-                break;
             case HumanType.None:
-                //gameObject.SetActive(renderer.isVisible);
-                break;
-            case HumanType.Enemy:
                 break;
             default:
+                if (targetTransform)
+                {
+                    agent.SetDestination(targetTransform.position);
+                }
                 break;
         }
 
@@ -67,34 +61,46 @@ public class HumanController : MonoBehaviour
     void OnCollisionEnter(Collision other)
     {
         ColToUnityChan(other);
-        ColToPlayerHuman(other);
+        ColToHuman(other);
+        ColToNPC(other);
+    }
+
+    void ColToNPC(Collision other)
+    {
+        var npc = other.gameObject.GetComponent<NPCController>();
+        if (npc == null) { return; }
+        HumanTypeToPlayer(npc.transform, HumanType.NPC);
     }
 
     void ColToUnityChan(Collision other)
     {
         var unityChan = other.gameObject.GetComponent<UnityChanController>();
         if (unityChan == null) { return; }
-        HumanTypeToPlayer();
+        HumanTypeToPlayer(unityChan.transform, HumanType.Player);
     }
 
-    void ColToPlayerHuman(Collision other)
+    void ColToHuman(Collision other)
     {
         var human = other.gameObject.GetComponent<HumanController>();
         if (human == null) { return; }
-        if (human.humanType != HumanType.Player) { return; }
-        HumanTypeToPlayer();
+        //if (human.humanType != HumanType.Player) { return; }
+        HumanTypeToPlayer(human.targetTransform, human.humanType);
     }
 
 
-    void HumanTypeToPlayer()
+    void HumanTypeToPlayer(Transform targetTransform, HumanType humanType)
     {
-        if (humanType != HumanType.None) { return; }
+        if (this.humanType != HumanType.None) { return; }
+
+        this.targetTransform = targetTransform;
+        this.humanType = humanType;
+
         for (int i = 0; i < animators.Length; i++)
         {
             animators[i].gameObject.SetActive(i == 1);
         }
         animators[1].SetBool("Run", true);
-        humanType = HumanType.Player;
+
         agent.enabled = true;
         Variables.playerCount++;
         hitPS.Play();
