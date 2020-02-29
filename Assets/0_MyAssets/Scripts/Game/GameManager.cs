@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] CameraController cameraController;
     [SerializeField] UnityChanController unityChanController;
     [SerializeField] HumanManager humanManager;
-  
+
 
     public void OnStart()
     {
@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     public void OnInitialize()
     {
         Variables.timer = Values.TIME_LIMIT;
+        Variables.playerCount = 0;
     }
 
     public void OnUpdate()
