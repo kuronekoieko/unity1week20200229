@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+using UnityEngine.UI;
 
 /// <summary>
 /// 3D空間の処理の管理
@@ -10,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] CameraController cameraController;
     [SerializeField] UnityChanController unityChanController;
     [SerializeField] HumanManager humanManager;
+  
 
     public void OnStart()
     {
@@ -17,6 +20,8 @@ public class GameManager : MonoBehaviour
         unityChanController.OnStart();
         cameraController.OnStart(playerPos: unityChanController.transform.position);
         humanManager.OnStart(unityChanController);
+
+
     }
 
     public void OnInitialize()

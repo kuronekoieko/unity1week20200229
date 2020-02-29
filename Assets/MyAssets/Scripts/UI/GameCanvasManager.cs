@@ -13,6 +13,7 @@ using UniRx;
 public class GameCanvasManager : BaseCanvasManager
 {
     [SerializeField] Text timerText;
+    [SerializeField] Text playerCountText;
     public override void OnStart()
     {
         base.SetScreenAction(thisScreen: ScreenState.GAME);
@@ -21,6 +22,9 @@ public class GameCanvasManager : BaseCanvasManager
             .Subscribe(_ => { SetTimeCountText(); })
             .AddTo(this.gameObject);
 
+        this.ObserveEveryValueChanged(humanCount => Variables.playerCount)
+            .Subscribe(humanCount => { playerCountText.text = humanCount.ToString(); })
+            .AddTo(this.gameObject);
     }
 
     public override void OnInitialize()

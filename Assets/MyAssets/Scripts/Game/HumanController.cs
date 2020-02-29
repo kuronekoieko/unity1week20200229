@@ -15,7 +15,7 @@ using UnityEngine.AI;
 /// </summary>
 public class HumanController : MonoBehaviour
 {
-    [SerializeField] Animator animator;
+    [SerializeField] Animator[] animators;
     UnityChanController unityChan;
     float m_speed = 5;
     float m_attenuation = 0.5f;
@@ -35,6 +35,11 @@ public class HumanController : MonoBehaviour
         agent.acceleration = 50;
         agent.speed = 10;
         agent.enabled = false;
+
+        for (int i = 0; i < animators.Length; i++)
+        {
+            animators[i].gameObject.SetActive(i == 0);
+        }
     }
 
     public void OnUpdate()
@@ -82,10 +87,18 @@ public class HumanController : MonoBehaviour
 
     void HumanTypeToPlayer()
     {
-        animator.SetBool("Run", true);
+        if (humanType != HumanType.None) { return; }
+        for (int i = 0; i < animators.Length; i++)
+        {
+            animators[i].gameObject.SetActive(i == 1);
+        }
+        animators[1].SetBool("Run", true);
         humanType = HumanType.Player;
         agent.enabled = true;
+        Variables.playerCount++;
     }
+
+
 
 
 }
