@@ -23,7 +23,7 @@ public class HumanManager : MonoBehaviour
         {
             Vector3 pos = GetRandomPos();
             humanControllers[i] = Instantiate(humanControllerPrefab, pos, Quaternion.identity, transform);
-            humanControllers[i].OnStart(HumanType.None);
+            humanControllers[i].OnStart(HumanType.None, pos);
         }
     }
 

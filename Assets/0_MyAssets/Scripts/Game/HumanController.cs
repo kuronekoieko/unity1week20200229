@@ -16,7 +16,8 @@ using System;
 /// </summary>
 public class HumanController : MonoBehaviour
 {
-    [SerializeField] Animator[] animators;
+    [SerializeField] Animator playerSkin;
+    [SerializeField] Animator whiteSkin;
     [SerializeField] ParticleSystem hitPS;
     Transform mTargetTransform;
     float m_speed = 5;
@@ -25,7 +26,9 @@ public class HumanController : MonoBehaviour
     NavMeshAgent agent;
     public HumanType humanType { set; get; }
 
-    public void OnStart(HumanType humanType)
+    Transform[] nPCSkins;
+
+    public void OnStart(HumanType humanType, Vector3 pos)
     {
         this.humanType = humanType;
         // animator = GetComponent<Animator>();
@@ -37,9 +40,14 @@ public class HumanController : MonoBehaviour
         agent.speed = 15;
         agent.enabled = false;
 
-        for (int i = 0; i < animators.Length; i++)
+        playerSkin.gameObject.SetActive(false);
+        whiteSkin.gameObject.SetActive(true);
+
+        nPCSkins = new Transform[NPCSkinSO.i.skins.Length];
+        for (int i = 0; i < nPCSkins.Length; i++)
         {
-            animators[i].gameObject.SetActive(i == 0);
+            nPCSkins[i] = Instantiate(NPCSkinSO.i.skins[i], pos, Quaternion.identity, transform);
+            nPCSkins[i].gameObject.SetActive(false);
         }
     }
 
@@ -73,7 +81,8 @@ public class HumanController : MonoBehaviour
         HumanTypeToPlayer(npc.transform, HumanType.NPC, () =>
         {
             Variables.nPCHumanCounts[npc.index]++;
-            SetAnim(npc.index + 2);
+            whiteSkin.gameObject.SetActive(false);
+            ShowNPC(npc.index);
         });
     }
 
@@ -84,7 +93,8 @@ public class HumanController : MonoBehaviour
         HumanTypeToPlayer(unityChan.transform, HumanType.Player, () =>
         {
             Variables.humanCount++;
-            SetAnim(1);
+            playerSkin.gameObject.SetActive(true);
+            whiteSkin.gameObject.SetActive(false);
         });
     }
 
@@ -99,12 +109,14 @@ public class HumanController : MonoBehaviour
             if (npc)
             {
                 Variables.nPCHumanCounts[npc.index]++;
-                SetAnim(npc.index + 2);
+                whiteSkin.gameObject.SetActive(false);
+                ShowNPC(npc.index);
             }
             else
             {
                 Variables.humanCount++;
-                SetAnim(1);
+                playerSkin.gameObject.SetActive(true);
+                whiteSkin.gameObject.SetActive(false);
             }
         });
     }
@@ -117,8 +129,6 @@ public class HumanController : MonoBehaviour
         mTargetTransform = targetTransform;
         this.humanType = humanType;
 
-
-
         agent.enabled = true;
 
         Count();
@@ -127,13 +137,12 @@ public class HumanController : MonoBehaviour
     }
 
 
-    void SetAnim(int index)
+    void ShowNPC(int index)
     {
-        for (int i = 0; i < animators.Length; i++)
+        for (int i = 0; i < nPCSkins.Length; i++)
         {
-            animators[i].gameObject.SetActive(i == index);
+            nPCSkins[i].gameObject.SetActive(index == i);
         }
-        animators[index].SetBool("Run", true);
     }
 
 }

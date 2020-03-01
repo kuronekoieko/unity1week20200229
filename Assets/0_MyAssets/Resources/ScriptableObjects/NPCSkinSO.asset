@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0266af1a6c940daa0a1b0303645d1a, type: 3}
+  m_Name: NPCSkinSO
+  m_EditorClassIdentifier: 
+  skins:
+  - {fileID: 8965349747776421342, guid: 77ce4070e293840679f5d1decb23898f, type: 3}
+  - {fileID: 9141956933961437885, guid: 5eb0555c17c854e3184bed5a035b77f7, type: 3}
+  - {fileID: 5302701246156031459, guid: 90e2ba16bb5b34408b699f1b76377671, type: 3}
