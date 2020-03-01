@@ -73,6 +73,7 @@ public class HumanController : MonoBehaviour
         HumanTypeToPlayer(npc.transform, HumanType.NPC, () =>
         {
             Variables.nPCHumanCounts[npc.index]++;
+            SetAnim(npc.index + 2);
         });
     }
 
@@ -83,6 +84,7 @@ public class HumanController : MonoBehaviour
         HumanTypeToPlayer(unityChan.transform, HumanType.Player, () =>
         {
             Variables.humanCount++;
+            SetAnim(1);
         });
     }
 
@@ -97,10 +99,12 @@ public class HumanController : MonoBehaviour
             if (npc)
             {
                 Variables.nPCHumanCounts[npc.index]++;
+                SetAnim(npc.index + 2);
             }
             else
             {
                 Variables.humanCount++;
+                SetAnim(1);
             }
         });
     }
@@ -113,11 +117,7 @@ public class HumanController : MonoBehaviour
         mTargetTransform = targetTransform;
         this.humanType = humanType;
 
-        for (int i = 0; i < animators.Length; i++)
-        {
-            animators[i].gameObject.SetActive(i == 1);
-        }
-        animators[1].SetBool("Run", true);
+
 
         agent.enabled = true;
 
@@ -127,6 +127,13 @@ public class HumanController : MonoBehaviour
     }
 
 
-
+    void SetAnim(int index)
+    {
+        for (int i = 0; i < animators.Length; i++)
+        {
+            animators[i].gameObject.SetActive(i == index);
+        }
+        animators[index].SetBool("Run", true);
+    }
 
 }

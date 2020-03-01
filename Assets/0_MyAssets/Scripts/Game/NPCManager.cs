@@ -14,8 +14,7 @@ public class NPCManager : MonoBehaviour
         {
             Vector3 pos = GameDirector.i.gameManager.humanManager.GetRandomPos();
             nPCControllers[i] = Instantiate(nPCControllerPrefab, pos, Quaternion.identity, transform);
-            nPCControllers[i].OnStart();
-            nPCControllers[i].index = i;
+            nPCControllers[i].OnStart(i);
         }
     }
 
