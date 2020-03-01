@@ -14,7 +14,8 @@ using System.Linq;
 public class GameCanvasManager : BaseCanvasManager
 {
     [SerializeField] Text timerText;
-    [SerializeField] HumanCountText[] humanCountTexts;
+    [SerializeField] Text humanCountText;
+    [SerializeField] Text[] nPCHumanCountTexts;
 
     public override void OnStart()
     {
@@ -24,19 +25,21 @@ public class GameCanvasManager : BaseCanvasManager
             .Subscribe(_ => { SetTimeCountText(); })
             .AddTo(this.gameObject);
 
-        foreach (KeyValuePair<HumanType, int> kvp in Variables.humanCountDic)
-        {
-            var humanCountText = humanCountTexts
-                    .Where(h => h.humanType == kvp.Key)
-                    .FirstOrDefault();
-            if (humanCountText == null) { continue; }
-
-            this.ObserveEveryValueChanged(humanCount => Variables.humanCountDic[kvp.Key])
-                .Subscribe(humanCount => { humanCountText.text.text = humanCount.ToString(); })
-                .AddTo(this.gameObject);
-        }
+        this.ObserveEveryValueChanged(humanCount => Variables.humanCount)
+            .Subscribe(humanCount => { humanCountText.text = humanCount.ToString(); })
+            .AddTo(this.gameObject);
 
 
+        test(0);
+        test(1);
+        test(2);
+    }
+
+    void test(int i)
+    {
+        this.ObserveEveryValueChanged(nPCHumanCount => Variables.nPCHumanCounts[i])
+            .Subscribe(nPCHumanCount => { nPCHumanCountTexts[i].text = Variables.nPCHumanCounts[i].ToString(); })
+            .AddTo(this.gameObject);
     }
 
     public override void OnInitialize()
@@ -65,12 +68,5 @@ public class GameCanvasManager : BaseCanvasManager
         float mSec = (Variables.timer - (sec - 1)) * 60f;
         if (Variables.timer == Values.TIME_LIMIT) { mSec = 0; }
         timerText.text = sec + "." + mSec.ToString("00");
-    }
-
-    [System.Serializable]
-    public class HumanCountText
-    {
-        public HumanType humanType;
-        public Text text;
     }
 }

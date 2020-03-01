@@ -27,7 +27,7 @@ public class HumanManager : MonoBehaviour
         }
     }
 
-    Vector3 GetRandomPos()
+    public Vector3 GetRandomPos()
     {
         //座標をランダムに取得
         float x = Random.Range(fieldCornerLL.position.x, fieldCornerUR.position.x);

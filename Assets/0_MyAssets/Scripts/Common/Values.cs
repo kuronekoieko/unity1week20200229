@@ -8,4 +8,5 @@ using UnityEngine;
 public class Values
 {
     public static readonly float TIME_LIMIT = 90;
+    public static readonly int NPC_COUNT = 3;
 }

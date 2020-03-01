@@ -8,7 +8,7 @@ public class NPCController : MonoBehaviour
     [SerializeField] Animator animator;
     NavMeshAgent agent;
     public Transform targetTransform { get; set; }
-
+    public int index { get; set; }
     public void OnStart()
     {
         animator.SetBool("Run", false);
@@ -17,8 +17,6 @@ public class NPCController : MonoBehaviour
         agent.angularSpeed = 1000;
         agent.acceleration = 100;
         agent.speed = 5;
-        // agent.enabled = false;
-
     }
 
     public void OnUpdate()

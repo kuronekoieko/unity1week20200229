@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using System;
 
 /// <summary>
 /// 敵キャラをUnityのナビゲーション機能を使って移動させる
@@ -17,7 +18,7 @@ public class HumanController : MonoBehaviour
 {
     [SerializeField] Animator[] animators;
     [SerializeField] ParticleSystem hitPS;
-    public Transform targetTransform { get; set; }
+    Transform mTargetTransform;
     float m_speed = 5;
     float m_attenuation = 0.5f;
     private Vector3 m_velocity;
@@ -49,9 +50,9 @@ public class HumanController : MonoBehaviour
             case HumanType.None:
                 break;
             default:
-                if (targetTransform)
+                if (mTargetTransform)
                 {
-                    agent.SetDestination(targetTransform.position);
+                    agent.SetDestination(mTargetTransform.position);
                 }
                 break;
         }
@@ -69,30 +70,47 @@ public class HumanController : MonoBehaviour
     {
         var npc = other.gameObject.GetComponent<NPCController>();
         if (npc == null) { return; }
-        HumanTypeToPlayer(npc.transform, HumanType.NPC);
+        HumanTypeToPlayer(npc.transform, HumanType.NPC, () =>
+        {
+            Variables.nPCHumanCounts[npc.index]++;
+        });
     }
 
     void ColToUnityChan(Collision other)
     {
         var unityChan = other.gameObject.GetComponent<UnityChanController>();
         if (unityChan == null) { return; }
-        HumanTypeToPlayer(unityChan.transform, HumanType.Player);
+        HumanTypeToPlayer(unityChan.transform, HumanType.Player, () =>
+        {
+            Variables.humanCount++;
+        });
     }
 
     void ColToHuman(Collision other)
     {
         var human = other.gameObject.GetComponent<HumanController>();
         if (human == null) { return; }
-        //if (human.humanType != HumanType.Player) { return; }
-        HumanTypeToPlayer(human.targetTransform, human.humanType);
+        if (human.humanType == HumanType.None) { return; }
+        HumanTypeToPlayer(human.mTargetTransform, human.humanType, () =>
+        {
+            var npc = human.mTargetTransform.GetComponent<NPCController>();
+            if (npc)
+            {
+                Variables.nPCHumanCounts[npc.index]++;
+            }
+            else
+            {
+                Variables.humanCount++;
+            }
+        });
     }
 
 
-    void HumanTypeToPlayer(Transform targetTransform, HumanType humanType)
+    void HumanTypeToPlayer(Transform targetTransform, HumanType humanType, Action Count)
     {
         if (this.humanType != HumanType.None) { return; }
 
-        this.targetTransform = targetTransform;
+        mTargetTransform = targetTransform;
         this.humanType = humanType;
 
         for (int i = 0; i < animators.Length; i++)
@@ -102,7 +120,9 @@ public class HumanController : MonoBehaviour
         animators[1].SetBool("Run", true);
 
         agent.enabled = true;
-        Variables.humanCountDic[humanType]++;
+
+        Count();
+
         hitPS.Play();
     }
 

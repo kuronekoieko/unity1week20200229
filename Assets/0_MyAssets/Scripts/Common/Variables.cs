@@ -13,6 +13,7 @@ public class Variables : MonoBehaviour
     public static ScreenState screenState;
     public static GameState gameState;
     public static float timer;
-    public static Dictionary<HumanType, int> humanCountDic;
+    public static int humanCount;
+    public static int[] nPCHumanCounts;
 
 }

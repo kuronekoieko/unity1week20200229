@@ -37,7 +37,7 @@ public class CameraController : MonoBehaviour
     public void SetCamPos(Vector3 playerPos)
     {
 
-        if (apertureDic.TryGetValue(Variables.humanCountDic[HumanType.Player], out float aperture))
+        if (apertureDic.TryGetValue(Variables.humanCount, out float aperture))
         {
             float f = focalLength(Camera.main.fieldOfView, aperture);
             DOTween.To(() => nFocalLength, (x) => nFocalLength = x, f, 0.5f);

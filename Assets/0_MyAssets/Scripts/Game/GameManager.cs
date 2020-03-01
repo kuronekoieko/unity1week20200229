@@ -14,18 +14,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] CameraController _cameraController;
     [SerializeField] UnityChanController _unityChanController;
     [SerializeField] HumanManager _humanManager;
-    [SerializeField] NPCController _nPCController;
+    [SerializeField] NPCManager _nPCManager;
 
     public HumanManager humanManager { get { return _humanManager; } }
     public UnityChanController unityChanController { get { return _unityChanController; } }
 
     void Awake()
     {
-        Variables.humanCountDic = new Dictionary<HumanType, int>();
-        foreach (HumanType humanType in Enum.GetValues(typeof(HumanType)))
-        {
-            Variables.humanCountDic.Add(humanType, 0);
-        }
+        Variables.nPCHumanCounts = new int[Values.NPC_COUNT];
     }
 
     public void OnStart()
@@ -33,8 +29,13 @@ public class GameManager : MonoBehaviour
         _unityChanController.OnStart();
         _cameraController.OnStart(playerPos: _unityChanController.transform.position);
         _humanManager.OnStart(_unityChanController);
-        _nPCController.OnStart();
+        _nPCManager.OnStart();
         Variables.timer = Values.TIME_LIMIT;
+
+        for (int i = 0; i < Variables.nPCHumanCounts.Length; i++)
+        {
+            Variables.nPCHumanCounts[i] = 0;
+        }
     }
 
     public void OnInitialize()
@@ -46,7 +47,7 @@ public class GameManager : MonoBehaviour
     {
         _humanManager.OnUpdate();
         _unityChanController.OnUpdate();
-        _nPCController.OnUpdate();
+        _nPCManager.OnUpdate();
         _cameraController.OnUpdate();
         _cameraController.SetCamPos(playerPos: _unityChanController.transform.position);
         Variables.timer -= Time.deltaTime;
