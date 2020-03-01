@@ -7,6 +7,6 @@ using UnityEngine;
 /// </summary>
 public class Values
 {
-    public static readonly float TIME_LIMIT = 90;
+    public static readonly float TIME_LIMIT = 120;
     public static readonly int NPC_COUNT = 3;
 }

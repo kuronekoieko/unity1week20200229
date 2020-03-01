@@ -8,9 +8,11 @@ public class UnityChanController : MonoBehaviour
     Vector3 warkVec;
     float walkSpeed = 10f;
     Rigidbody rb;
+    public static UnityChanController i;
 
     public void OnStart()
     {
+        i = this;
         rb = GetComponent<Rigidbody>();
         animator.SetBool("Run", false);
     }

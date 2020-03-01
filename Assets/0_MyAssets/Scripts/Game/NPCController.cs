@@ -25,7 +25,12 @@ public class NPCController : MonoBehaviour
         targetTransform = GameDirector.i.gameManager.humanManager.GetTargetTransform(transform.position);
         if (targetTransform)
         {
+            //agent.SetDestination(Vector3.zero);
+
             agent.SetDestination(targetTransform.position);
+
+
+            Debug.Log(agent.hasPath);
         }
     }
 }

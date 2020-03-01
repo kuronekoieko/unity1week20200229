@@ -19,18 +19,19 @@ public class HumanController : MonoBehaviour
     [SerializeField] Animator playerSkin;
     [SerializeField] Animator whiteSkin;
     [SerializeField] ParticleSystem hitPS;
+    [SerializeField] MeshRenderer cube;
+    [SerializeField] Material red;
+    [SerializeField] Material blue;
+
     Transform mTargetTransform;
-    float m_speed = 5;
-    float m_attenuation = 0.5f;
-    private Vector3 m_velocity;
     NavMeshAgent agent;
-    public HumanType humanType { set; get; }
+    public bool isBelongToTeam { set; get; }
 
     Transform[] nPCSkins;
 
-    public void OnStart(HumanType humanType, Vector3 pos)
+    public void OnStart(Vector3 pos)
     {
-        this.humanType = humanType;
+        isBelongToTeam = false;
         // animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         //目標地点のどれぐらい手前で停止するかの距離
@@ -53,17 +54,20 @@ public class HumanController : MonoBehaviour
 
     public void OnUpdate()
     {
-        switch (humanType)
-        {
-            case HumanType.None:
-                break;
-            default:
-                if (mTargetTransform)
-                {
-                    agent.SetDestination(mTargetTransform.position);
-                }
-                break;
-        }
+        if (!isBelongToTeam) { return; }
+        if (mTargetTransform == null) { return; }
+        if (!agent.enabled) { return; }
+
+        agent.SetDestination(mTargetTransform.position);
+
+        //  Debug.Log(agent.hasPath);
+
+        //  var uni = mTargetTransform.GetComponent<UnityChanController>();
+        // if (uni) { cube.material = red; }
+        // var npc = mTargetTransform.GetComponent<NPCController>();
+        // if (npc) { cube.material = blue; }
+
+        // agent.SetDestination(mTargetTransform.position);
 
     }
 
@@ -78,32 +82,48 @@ public class HumanController : MonoBehaviour
     {
         var npc = other.gameObject.GetComponent<NPCController>();
         if (npc == null) { return; }
-        HumanTypeToPlayer(npc.transform, HumanType.NPC, () =>
-        {
-            Variables.nPCHumanCounts[npc.index]++;
-            whiteSkin.gameObject.SetActive(false);
-            ShowNPC(npc.index);
-        });
+
+        if (isBelongToTeam) { return; }
+        Debug.Log("NPC");
+        mTargetTransform = npc.transform;
+        //  return;
+        isBelongToTeam = true;
+
+        agent.enabled = true;
+
+        Variables.nPCHumanCounts[npc.index]++;
+        whiteSkin.gameObject.SetActive(false);
+        ShowNPC(npc.index);
+
+        hitPS.Play();
+        /* HumanTypeToPlayer(npc.transform, HumanType.NPC, () =>
+          {
+              Variables.nPCHumanCounts[npc.index]++;
+              whiteSkin.gameObject.SetActive(false);
+              ShowNPC(npc.index);
+          });*/
+
     }
 
     void ColToUnityChan(Collision other)
     {
         var unityChan = other.gameObject.GetComponent<UnityChanController>();
         if (unityChan == null) { return; }
-        HumanTypeToPlayer(unityChan.transform, HumanType.Player, () =>
-        {
-            Variables.humanCount++;
-            playerSkin.gameObject.SetActive(true);
-            whiteSkin.gameObject.SetActive(false);
-        });
+        HumanTypeToPlayer(unityChan.transform, () =>
+       {
+           Variables.humanCount++;
+           playerSkin.gameObject.SetActive(true);
+           whiteSkin.gameObject.SetActive(false);
+       });
     }
 
     void ColToHuman(Collision other)
     {
         var human = other.gameObject.GetComponent<HumanController>();
         if (human == null) { return; }
-        if (human.humanType == HumanType.None) { return; }
-        HumanTypeToPlayer(human.mTargetTransform, human.humanType, () =>
+        if (!human.isBelongToTeam) { return; }
+
+        HumanTypeToPlayer(human.mTargetTransform, () =>
         {
             var npc = human.mTargetTransform.GetComponent<NPCController>();
             if (npc)
@@ -122,18 +142,19 @@ public class HumanController : MonoBehaviour
     }
 
 
-    void HumanTypeToPlayer(Transform targetTransform, HumanType humanType, Action Count)
+    void HumanTypeToPlayer(Transform targetTransform, Action Count)
     {
-        if (this.humanType != HumanType.None) { return; }
+        if (isBelongToTeam) { return; }
 
         mTargetTransform = targetTransform;
-        this.humanType = humanType;
+        isBelongToTeam = true;
 
         agent.enabled = true;
 
         Count();
 
         hitPS.Play();
+        SoundManager.i.PlayOneShot(2);
     }
 
 
